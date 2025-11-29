@@ -1,5 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Ut7jl3gL)
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=21863706)
+
 # Caso de Estudio: "NeuroNet: Análisis y Visualización de Propagación en Redes Masivas"
 
 ## Definición del Problema a Resolver
@@ -8,27 +9,26 @@ La organización de investigación "Global Connectivity Watch" necesita una herr
 
 Las herramientas actuales basadas puramente en Python (como NetworkX) son demasiado lentas para procesar grafos de millones de nodos en tiempo real, y las herramientas en C++ puro carecen de capacidades de visualización ágiles.
 
-
 Por lo tanto se necesita desarrollar un sistema híbrido llamado **NeuroNet**. El núcleo del sistema (backend) debe ser un motor de procesamiento de grafos escrito en **C++** altamente optimizado, que implemente **matrices poco densas (Sparse Matrices)** para la gestión de memoria. Este núcleo debe exponerse mediante **Cython** a una interfaz gráfica en **Python**, la cual utilizará librerías como `NetworkX` o `Matplotlib` únicamente para visualizar sub-grafos o resultados específicos, pero **nunca** para el procesamiento de datos.
 
 El sistema debe cargar un dataset masivo (Benchmark del proyecto SNAP de Stanford), almacenarlo eficientemente utilizando estructuras comprimidas (CSR - Compressed Sparse Row) hechas a mano, y permitir al usuario realizar análisis de centralidad y simulaciones de recorrido desde una interfaz visual.
 
------
+---
 
 ## Temas Relacionados y Necesarios
 
 Para resolver este problema, se deberá utilizar e integrar los siguientes conceptos:
 
-| Tema Principal | Concepto a Aplicar |
-| :--- | :--- |
-| **Grafos Masivos** | Manejo de millones de nodos y aristas. Diferencia entre grafos dirigidos y no dirigidos. |
+| Tema Principal           | Concepto a Aplicar                                                                                                                                                   |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Grafos Masivos**       | Manejo de millones de nodos y aristas. Diferencia entre grafos dirigidos y no dirigidos.                                                                             |
 | **Matrices Poco Densas** | Implementación manual del formato **CSR (Compressed Sparse Row)** o **COO (Coordinate List)** para representar la Matriz de Adyacencia sin desperdiciar memoria RAM. |
-| **POO Avanzada en C++** | Uso de **Clases Abstractas** para definir la interfaz del Grafo (`IGraph`), y herencia para implementaciones específicas (`SparseGraph`). |
-| **Recorridos de Grafos** | Implementación "a mano" de **BFS** (Búsqueda en Anchura) para encontrar el camino más corto y **DFS** (Profundidad) para detección de ciclos o componentes conexos. |
-| **Cython** | Creación de archivos `.pxd` y `.pyx` para compilar código C++ como un módulo importable en Python. Interoperabilidad de punteros y memoria. |
-| **Python GUI** | Uso de `Tkinter`, `PyQt` o `Streamlit` para invocar las funciones de C++ y visualizar los resultados. |
+| **POO Avanzada en C++**  | Uso de **Clases Abstractas** para definir la interfaz del Grafo (`IGraph`), y herencia para implementaciones específicas (`SparseGraph`).                            |
+| **Recorridos de Grafos** | Implementación "a mano" de **BFS** (Búsqueda en Anchura) para encontrar el camino más corto y **DFS** (Profundidad) para detección de ciclos o componentes conexos.  |
+| **Cython**               | Creación de archivos `.pxd` y `.pyx` para compilar código C++ como un módulo importable en Python. Interoperabilidad de punteros y memoria.                          |
+| **Python GUI**           | Uso de `Tkinter`, `PyQt` o `Streamlit` para invocar las funciones de C++ y visualizar los resultados.                                                                |
 
------
+---
 
 ## Definición y Detalles del Proceso a Desarrollar
 
@@ -37,12 +37,12 @@ Para resolver este problema, se deberá utilizar e integrar los siguientes conce
 El sistema constará de tres capas:
 
 1. **Capa Núcleo (C++):**
-      * **Clase Abstracta `GrafoBase`:** Define métodos virtuales puros como `cargarDatos()`, `BFS()`, `obtenerGrado()`, `getVecinos()`.
-      * **Clase Concreta `GrafoDisperso`:** Hereda de `GrafoBase`. Implementa la matriz de adyacencia utilizando vectores dinámicos (punteros) para simular el formato **CSR**. *No se permite una matriz de adyacencia clásica $N \times N$ debido al consumo de memoria.*
+   - **Clase Abstracta `GrafoBase`:** Define métodos virtuales puros como `cargarDatos()`, `BFS()`, `obtenerGrado()`, `getVecinos()`.
+   - **Clase Concreta `GrafoDisperso`:** Hereda de `GrafoBase`. Implementa la matriz de adyacencia utilizando vectores dinámicos (punteros) para simular el formato **CSR**. _No se permite una matriz de adyacencia clásica $N \times N$ debido al consumo de memoria._
 2. **Capa de Enlace (Cython):**
-      * Un "Wrapper" que instancia la clase de C++, convierte los tipos de datos de Python a C++ y viceversa, y expone los métodos de cálculo.
+   - Un "Wrapper" que instancia la clase de C++, convierte los tipos de datos de Python a C++ y viceversa, y expone los métodos de cálculo.
 3. **Capa de Presentación (Python):**
-      * Interfaz Gráfica de Usuario (GUI) que permite seleccionar el archivo dataset, ejecutar algoritmos y visualizar los nodos críticos usando `NetworkX` (solo para dibujar el resultado final, no para calcular).
+   - Interfaz Gráfica de Usuario (GUI) que permite seleccionar el archivo dataset, ejecutar algoritmos y visualizar los nodos críticos usando `NetworkX` (solo para dibujar el resultado final, no para calcular).
 
 ### B. Flujo de Trabajo
 
@@ -51,7 +51,7 @@ El sistema constará de tres capas:
 3. **Simulación de Recorrido:** El usuario selecciona un nodo de inicio y una profundidad máxima. El motor C++ ejecuta un **BFS** "a mano" y retorna la lista de nodos visitados y sus aristas.
 4. **Visualización:** Python recibe la lista de nodos/aristas del subgrafo resultante y lo dibuja en pantalla.
 
------
+---
 
 ## Requerimientos Funcionales y No Funcionales
 
@@ -60,12 +60,12 @@ El sistema constará de tres capas:
 1.  **Carga de Benchmarks:** El sistema debe leer archivos de texto plano formato "Edge List" (NodoOrigen NodoDestino).
 2.  **Representación Dispersa:** Implementar manualmente la Matriz de Adyacencia usando formato CSR (3 vectores: valores, índices de columnas, punteros de fila) o Listas de Adyacencia optimizadas.
 3.  **Algoritmos Nativos:**
-      * **Grado de Nodos:** Calcular qué nodo tiene más conexiones (entrada/salida).
-      * **BFS (Breadth-First Search):** Para encontrar la distancia entre dos nodos seleccionados.
+    - **Grado de Nodos:** Calcular qué nodo tiene más conexiones (entrada/salida).
+    - **BFS (Breadth-First Search):** Para encontrar la distancia entre dos nodos seleccionados.
 4.  **Interfaz Gráfica:**
-      * Botón para cargar archivo.
-      * Visualización de métricas (Tiempo de carga, Memoria usada, Nodo con mayor grado).
-      * Canvas para dibujar el subgrafo resultante de una búsqueda.
+    - Botón para cargar archivo.
+    - Visualización de métricas (Tiempo de carga, Memoria usada, Nodo con mayor grado).
+    - Canvas para dibujar el subgrafo resultante de una búsqueda.
 5.  **Interoperabilidad:** El cálculo pesado debe ocurrir en C++, la visualización en Python.
 
 ### Requisitos No Funcionales
@@ -75,7 +75,7 @@ El sistema constará de tres capas:
 3.  **Arquitectura Orientada a Objetos:** Uso estricto de herencia y polimorfismo en el código C++.
 4.  **Compilación Híbrida:** Se debe entregar un `setup.py` que compile el código C++ y genere la extensión de Python.
 
------
+---
 
 ## Ejemplo de Entradas y Salidas en Consola (Backend Debugging)
 
@@ -108,9 +108,9 @@ Aunque tendrá GUI, el backend debe mostrar logs de operación:
 
 **Salida (Interfaz Gráfica - Visual):**
 
-  * Se muestra un gráfico de "estrella" donde el nodo 0 está en el centro, conectado a sus vecinos directos, y estos a los suyos (nivel 2). .
+- Se muestra un gráfico de "estrella" donde el nodo 0 está en el centro, conectado a sus vecinos directos, y estos a los suyos (nivel 2). .
 
------
+---
 
 ## Temas Adicionales de Investigación Necesarios
 
